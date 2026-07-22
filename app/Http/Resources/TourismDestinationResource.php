@@ -21,10 +21,22 @@ class TourismDestinationResource extends JsonResource
         if ($image) {
             if (filter_var($image, FILTER_VALIDATE_URL)) {
                 $imageUrl = $image;
-            } elseif (Storage::disk('public')->exists('tourism/' . $image)) {
-                $imageUrl = asset('storage/tourism/' . $image);
-            } elseif (file_exists(public_path('storage/tourism/' . $image))) {
-                $imageUrl = asset('storage/tourism/' . $image);
+            } else {
+                $imagePath = ltrim($image, '/');
+
+                if (Storage::disk('public')->exists($imagePath)) {
+                    $imageUrl = asset('storage/' . $imagePath);
+                } elseif (Storage::disk('public')->exists('tourism/' . $imagePath)) {
+                    $imageUrl = asset('storage/tourism/' . $imagePath);
+                } elseif (file_exists(public_path($imagePath))) {
+                    $imageUrl = asset($imagePath);
+                } elseif (file_exists(public_path('storage/' . $imagePath))) {
+                    $imageUrl = asset('storage/' . $imagePath);
+                } elseif (file_exists(public_path('storage/tourism/' . $imagePath))) {
+                    $imageUrl = asset('storage/tourism/' . $imagePath);
+                } else {
+                    $imageUrl = asset('storage/' . $imagePath);
+                }
             }
         }
 
