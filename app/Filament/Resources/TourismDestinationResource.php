@@ -173,6 +173,109 @@ class TourismDestinationResource extends Resource
                             ->default(true)
                             ->columnSpan(1),
                     ])->columns(2),
+
+                Forms\Components\Section::make('Backend Controlled Data')
+                    ->schema([
+                        Forms\Components\TextInput::make('basic_info.trip_code')
+                            ->label('Trip Code')
+                            ->maxLength(50)
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('basic_info.days_num')
+                            ->label('Days Num')
+                            ->numeric()
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('basic_info.destination_name_en')
+                            ->label('Destination Name (English)')
+                            ->maxLength(255)
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('basic_info.destination_name_ar')
+                            ->label('Destination Name (Arabic)')
+                            ->maxLength(255)
+                            ->columnSpan(1),
+                        Forms\Components\DatePicker::make('basic_info.available_to')
+                            ->label('Available To')
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('basic_info.double_room_price')
+                            ->label('Double Room Price (SAR)')
+                            ->numeric()
+                            ->prefix('SAR')
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('basic_info.single_room_price')
+                            ->label('Single Room Price (SAR)')
+                            ->numeric()
+                            ->prefix('SAR')
+                            ->columnSpan(1),
+
+                        Forms\Components\TextInput::make('contact_info.address')
+                            ->label('Contact Address')
+                            ->maxLength(255)
+                            ->columnSpan(2),
+                        Forms\Components\TextInput::make('contact_info.phone')
+                            ->label('Contact Phone')
+                            ->tel()
+                            ->maxLength(20)
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('contact_info.whatsapp')
+                            ->label('WhatsApp')
+                            ->tel()
+                            ->maxLength(20)
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('contact_info.email')
+                            ->label('Contact Email')
+                            ->email()
+                            ->maxLength(100)
+                            ->columnSpan(2),
+
+                        Forms\Components\Repeater::make('payment_methods')
+                            ->label('Payment Methods')
+                            ->formatStateUsing(function ($state) {
+                                if (is_string($state)) {
+                                    $decoded = json_decode($state, true);
+                                    if (is_array($decoded)) {
+                                        return $decoded;
+                                    }
+                                }
+                                if (is_null($state)) {
+                                    return [];
+                                }
+                                return is_array($state) ? $state : [];
+                            })
+                            ->dehydrateStateUsing(function ($state) {
+                                if (is_string($state)) {
+                                    $decoded = json_decode($state, true);
+                                    if (is_array($decoded)) {
+                                        return $decoded;
+                                    }
+                                }
+                                if (is_array($state)) {
+                                    return $state;
+                                }
+                                return [];
+                            })
+                            ->schema([
+                                Forms\Components\TextInput::make('name_en')
+                                    ->label('Name (English)')
+                                    ->maxLength(255)
+                                    ->columnSpan(1),
+                                Forms\Components\TextInput::make('name_ar')
+                                    ->label('Name (Arabic)')
+                                    ->maxLength(255)
+                                    ->columnSpan(1),
+                                Forms\Components\TextInput::make('account_no')
+                                    ->label('Account Number')
+                                    ->maxLength(50)
+                                    ->columnSpan(1),
+                                Forms\Components\TextInput::make('iban')
+                                    ->label('IBAN')
+                                    ->maxLength(50)
+                                    ->columnSpan(1),
+                            ])
+                            ->defaultItems(0)
+                            ->collapsible()
+                            ->createItemButtonLabel('Add Payment Method')
+                            ->columns(2)
+                            ->columnSpanFull(),
+                    ])->columns(2),
             ]);
     }
 

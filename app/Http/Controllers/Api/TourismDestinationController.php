@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\TourismDestination;
+use App\Http\Resources\TourismDestinationResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,13 +18,11 @@ class TourismDestinationController extends Controller
             $query->where('region', $request->region);
         }
 
-        $destinations = $query->get()->map(function ($destination) {
-            return $this->formatDestination($destination);
-        });
+        $destinations = $query->get();
 
         return response()->json([
             'success' => true,
-            'data' => $destinations
+            'data' => TourismDestinationResource::collection($destinations),
         ]);
     }
 
@@ -35,7 +34,7 @@ class TourismDestinationController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $this->formatDestination($destination)
+            'data' => new TourismDestinationResource($destination),
         ]);
     }
 
@@ -43,14 +42,11 @@ class TourismDestinationController extends Controller
     {
         $destinations = TourismDestination::where('region', $region)
             ->where('active', true)
-            ->get()
-            ->map(function ($destination) {
-                return $this->formatDestination($destination);
-            });
+            ->get();
 
         return response()->json([
             'success' => true,
-            'data' => $destinations
+            'data' => TourismDestinationResource::collection($destinations),
         ]);
     }
 

@@ -74,4 +74,66 @@ class TourismOffer extends Model
         'popular' => 'boolean',
         'limited' => 'boolean',
     ];
+
+    private function decodeJsonArray($value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        return [];
+    }
+
+    private function prepareJsonValue($value): ?string
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $value;
+            }
+        }
+
+        if (is_array($value) || is_object($value)) {
+            return json_encode($value);
+        }
+
+        return null;
+    }
+
+    public function getBasicInfoAttribute($value): array
+    {
+        return $this->decodeJsonArray($value);
+    }
+
+    public function setBasicInfoAttribute($value): void
+    {
+        $this->attributes['basic_info'] = $this->prepareJsonValue($value);
+    }
+
+    public function getContactInfoAttribute($value): array
+    {
+        return $this->decodeJsonArray($value);
+    }
+
+    public function setContactInfoAttribute($value): void
+    {
+        $this->attributes['contact_info'] = $this->prepareJsonValue($value);
+    }
+
+    public function getPaymentMethodsAttribute($value): array
+    {
+        return $this->decodeJsonArray($value);
+    }
+
+    public function setPaymentMethodsAttribute($value): void
+    {
+        $this->attributes['payment_methods'] = $this->prepareJsonValue($value);
+    }
 }
