@@ -1,7 +1,7 @@
 # API ENDPOINTS REFERENCE
 
 **Project:** Tilal Rimal Travel Platform  
-**Base URL:** https://admin.tilalr.com  
+**Base URL:** http://localhost:8000  
 **API Prefix:** /api  
 **Authentication:** Sanctum Bearer Tokens  
 **Response Format:** JSON  
@@ -1123,7 +1123,7 @@ GET /api/testimonials?search=amazing
 
 ### Register
 ```bash
-curl -X POST https://admin.tilalr.com/api/register \
+curl -X POST http://localhost:8000/api/register \
   -H "Content-Type: application/json" \
   -d '{
     "name": "John Doe",
@@ -1136,18 +1136,18 @@ curl -X POST https://admin.tilalr.com/api/register \
 
 ### Get Islands
 ```bash
-curl -X GET "https://admin.tilalr.com/api/island-destinations?page=1&per_page=10"
+curl -X GET "http://localhost:8000/api/island-destinations?page=1&per_page=10"
 ```
 
 ### Authenticated Request
 ```bash
-curl -X GET "https://admin.tilalr.com/api/bookings" \
+curl -X GET "http://localhost:8000/api/bookings" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
 ### Create Payment
 ```bash
-curl -X POST https://admin.tilalr.com/api/payments \
+curl -X POST http://localhost:8000/api/payments \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "Content-Type: application/json" \
   -d '{
@@ -1164,7 +1164,7 @@ curl -X POST https://admin.tilalr.com/api/payments \
 
 1. Import the Postman collection (if provided)
 2. Set up environment variables:
-   - `{{base_url}}` = https://admin.tilalr.com
+   - `{{base_url}}` = http://localhost:8000
    - `{{token}}` = Your Bearer Token
    - `{{user_id}}` = Your User ID
 

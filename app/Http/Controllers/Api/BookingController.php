@@ -91,8 +91,29 @@ class BookingController extends Controller
                 } else {
                     $basicInfo = $package->basic_info ?? [];
                 }
-                $doubleRoomPrice = $basicInfo['double_room'] ?? $basicInfo['doubleRoom'] ?? $package->double_room_price ?? $package->price ?? 0;
-                $singleRoomPrice = $basicInfo['single_room'] ?? $basicInfo['singleRoom'] ?? $package->single_room_price ?? $package->double_room_price ?? $package->price ?? 0;
+                $doubleRoomPrice = 0;
+                if (!empty($basicInfo['double_room']) && doubleval($basicInfo['double_room']) > 0) {
+                    $doubleRoomPrice = doubleval($basicInfo['double_room']);
+                } elseif (!empty($basicInfo['doubleRoom']) && doubleval($basicInfo['doubleRoom']) > 0) {
+                    $doubleRoomPrice = doubleval($basicInfo['doubleRoom']);
+                } elseif (!empty($package->double_room_price) && doubleval($package->double_room_price) > 0) {
+                    $doubleRoomPrice = doubleval($package->double_room_price);
+                } else {
+                    $doubleRoomPrice = doubleval($package->price ?? 0);
+                }
+
+                $singleRoomPrice = 0;
+                if (!empty($basicInfo['single_room']) && doubleval($basicInfo['single_room']) > 0) {
+                    $singleRoomPrice = doubleval($basicInfo['single_room']);
+                } elseif (!empty($basicInfo['singleRoom']) && doubleval($basicInfo['singleRoom']) > 0) {
+                    $singleRoomPrice = doubleval($basicInfo['singleRoom']);
+                } elseif (!empty($package->single_room_price) && doubleval($package->single_room_price) > 0) {
+                    $singleRoomPrice = doubleval($package->single_room_price);
+                } elseif (!empty($package->double_room_price) && doubleval($package->double_room_price) > 0) {
+                    $singleRoomPrice = doubleval($package->double_room_price);
+                } else {
+                    $singleRoomPrice = doubleval($package->price ?? 0);
+                }
 
                 $price = $request->room_type === 'DoubleRoom'
                     ? $doubleRoomPrice
