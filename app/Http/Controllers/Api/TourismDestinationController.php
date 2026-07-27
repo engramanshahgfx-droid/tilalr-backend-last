@@ -102,35 +102,46 @@ class TourismDestinationController extends Controller
     {
         $destinations = TourismDestination::where('active', true)->get();
 
+        $regionIcons = [
+            'europe' => '🌍',
+            'asia' => '🌏',
+            'africa' => '🌍',
+            'australia' => '🌏',
+            'america' => '🌎',
+        ];
+
+        $regionArabic = [
+            'europe' => 'أوروبا',
+            'asia' => 'آسيا',
+            'africa' => 'أفريقيا',
+            'australia' => 'أستراليا ونيوزيلندا',
+            'america' => 'أمريكا',
+        ];
+
+        $regionEnglish = [
+            'europe' => 'Europe',
+            'asia' => 'Asia',
+            'africa' => 'Africa',
+            'australia' => 'Australia & New Zealand',
+            'america' => 'America',
+        ];
+
         $grouped = [];
         foreach ($destinations as $dest) {
-            $region = $dest->region ?? 'other';
+            $regionKey = strtolower($dest->region ?? 'other');
 
-            $regionIcons = [
-                'Europe' => '🌍',
-                'Asia' => '🌏',
-                'Africa' => '🌍',
-                'Australia' => '🌏',
-            ];
-
-            $regionArabic = [
-                'Europe' => 'أوروبا',
-                'Asia' => 'آسيا',
-                'Africa' => 'أفريقيا',
-                'Australia' => 'أستراليا ونيوزيلندا',
-            ];
-
-            if (!isset($grouped[$region])) {
-                $grouped[$region] = [
-                    'icon' => $regionIcons[$region] ?? '🌍',
-                    'ar' => $regionArabic[$region] ?? ucfirst($region),
+            if (!isset($grouped[$regionKey])) {
+                $grouped[$regionKey] = [
+                    'icon' => $regionIcons[$regionKey] ?? '🌍',
+                    'en' => $regionEnglish[$regionKey] ?? ucfirst($regionKey),
+                    'ar' => $regionArabic[$regionKey] ?? ucfirst($regionKey),
                     'countries' => []
                 ];
             }
 
-            $grouped[$region]['countries'][] = [
-                'en' => $dest->title_en,
-                'ar' => $dest->title_ar,
+            $grouped[$regionKey]['countries'][] = [
+                'en' => $dest->title_en ?: $dest->location_en,
+                'ar' => $dest->title_ar ?: $dest->location_ar,
                 'slug' => $dest->slug,
             ];
         }
