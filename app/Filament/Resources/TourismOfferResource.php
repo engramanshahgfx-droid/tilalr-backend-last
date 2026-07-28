@@ -29,7 +29,7 @@ class TourismOfferResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Tourism';
     protected static ?string $label = 'Tourism Offer';
-    protected static ?string $pluralLabel = 'Saudi Offers';
+    protected static ?string $pluralLabel = 'Saudi  Offers';
 
     public static function form(Form $form): Form
     {
@@ -105,7 +105,7 @@ class TourismOfferResource extends Resource
                                             ->placeholder('e.g., 2-4 People'),
 
                                         Textarea::make('features_en')
-                                            ->label('Features (English)')
+                                            ->label('Package Includes (English)')
                                             ->placeholder('Enter each feature on a new line')
                                             ->rows(4)
                                             ->helperText('Enter one feature per line')
@@ -133,34 +133,34 @@ class TourismOfferResource extends Resource
                                                 return json_encode([]);
                                             }),
 
-                                        Textarea::make('includes_en')
-                                            ->label('Package Includes (English)')
-                                            ->placeholder('Enter each include on a new line')
-                                            ->rows(4)
-                                            ->helperText('Enter one item per line')
-                                            ->formatStateUsing(function ($state) {
-                                                if (is_string($state)) {
-                                                    $decoded = json_decode($state, true);
-                                                    if (is_array($decoded)) {
-                                                        return implode("\n", $decoded);
-                                                    }
-                                                    return $state;
-                                                }
-                                                if (is_array($state)) {
-                                                    return implode("\n", $state);
-                                                }
-                                                return '';
-                                            })
-                                            ->dehydrateStateUsing(function ($state) {
-                                                if (is_string($state)) {
-                                                    $lines = array_filter(array_map('trim', explode("\n", $state)));
-                                                    return json_encode(array_values($lines));
-                                                }
-                                                if (is_array($state)) {
-                                                    return json_encode(array_values($state));
-                                                }
-                                                return json_encode([]);
-                                            }),
+                                        // Textarea::make('includes_en')
+                                        //     ->label('Package Includes (English)')
+                                        //     ->placeholder('Enter each include on a new line')
+                                        //     ->rows(4)
+                                        //     ->helperText('Enter one item per line')
+                                        //     ->formatStateUsing(function ($state) {
+                                        //         if (is_string($state)) {
+                                        //             $decoded = json_decode($state, true);
+                                        //             if (is_array($decoded)) {
+                                        //                 return implode("\n", $decoded);
+                                        //             }
+                                        //             return $state;
+                                        //         }
+                                        //         if (is_array($state)) {
+                                        //             return implode("\n", $state);
+                                        //         }
+                                        //         return '';
+                                        //     })
+                                        //     ->dehydrateStateUsing(function ($state) {
+                                        //         if (is_string($state)) {
+                                        //             $lines = array_filter(array_map('trim', explode("\n", $state)));
+                                        //             return json_encode(array_values($lines));
+                                        //         }
+                                        //         if (is_array($state)) {
+                                        //             return json_encode(array_values($state));
+                                        //         }
+                                        //         return json_encode([]);
+                                        //     }),
 
                                         Textarea::make('not_includes_en')
                                             ->label('Package Not Includes (English)')
@@ -275,7 +275,7 @@ class TourismOfferResource extends Resource
                                             ->placeholder('e.g., ٢-٤ أشخاص'),
 
                                         Textarea::make('features_ar')
-                                            ->label('Features (Arabic)')
+                                            ->label('Package Includes (Arabic)')
                                             ->placeholder('Enter each feature on a new line')
                                             ->rows(4)
                                             ->helperText('Enter one feature per line')

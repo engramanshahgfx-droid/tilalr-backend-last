@@ -97,21 +97,15 @@ class TourismDestinationResource extends Resource
                                         Forms\Components\TextInput::make('duration_en')
                                             ->label('Duration (English)')
                                             ->maxLength(255),
-                                        
+
                                         Forms\Components\Textarea::make('features_en')
-                                            ->label('Features (English)')
+                                            ->label('Package Includes (English)')
                                             ->placeholder('Enter one feature per line')
                                             ->rows(4)
                                             ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
                                             ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
 
-                                        Forms\Components\Textarea::make('includes_en')
-                                            ->label('Package Includes (English)')
-                                            ->placeholder('Enter one item per line')
-                                            ->rows(4)
-                                            ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
-                                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
-
+                                   
                                         Forms\Components\Textarea::make('not_includes_en')
                                             ->label('Package Not Includes (English)')
                                             ->placeholder('Enter one item per line')
@@ -177,7 +171,7 @@ class TourismDestinationResource extends Resource
                                             ->maxLength(255),
 
                                         Forms\Components\Textarea::make('features_ar')
-                                            ->label('Features (Arabic)')
+                                            ->label('Package Includes (Arabic)')
                                             ->placeholder('أدخل كل ميزة في سطر منفصل')
                                             ->rows(4)
                                             ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
