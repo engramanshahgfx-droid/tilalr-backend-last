@@ -23,259 +23,286 @@ class TourismDestinationResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Tourism Destination';
+        return 'International Destination';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Tourism Destinations';
+        return 'International Destinations';
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Tourism Destinations';
+        return 'International Destinations';
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Basic Information')
-                    ->schema([
-                        Forms\Components\TextInput::make('title_en')
-                            ->required()
-                            ->label('Title (English)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('title_ar')
-                            ->required()
-                            ->label('Title (Arabic)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('slug')
-                            ->required()
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\Select::make('region')
-                            ->options([
-                                'europe' => 'Europe',
-                                'asia' => 'Asia',
-                                'africa' => 'Africa',
-                                'australia' => 'Australia & New Zealand',
-                                'america' => 'America', // ✅ ADDED AMERICA
-                            ])
-                            ->required()
-                            ->columnSpan(1),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Description')
-                    ->schema([
-                        Forms\Components\Textarea::make('description_en')
-                            ->label('Description (English)')
-                            ->rows(3)
-                            ->columnSpanFull(),
-                        Forms\Components\Textarea::make('description_ar')
-                            ->label('Description (Arabic)')
-                            ->rows(3)
-                            ->columnSpanFull(),
-                    ]),
-
-                Forms\Components\Section::make('Location & Duration')
-                    ->schema([
-                        Forms\Components\TextInput::make('location_en')
-                            ->label('Location (English)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('location_ar')
-                            ->label('Location (Arabic)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('duration_en')
-                            ->label('Duration (English)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('duration_ar')
-                            ->label('Duration (Arabic)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Features')
-                    ->schema([
-                        Forms\Components\TagsInput::make('features_en')
-                            ->label('Features (English)')
-                            ->placeholder('Add features...')
-                            ->columnSpan(1),
-                        Forms\Components\TagsInput::make('features_ar')
-                            ->label('Features (Arabic)')
-                            ->placeholder('أضف الميزات...')
-                            ->columnSpan(1),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Pricing & Rating')
-                    ->schema([
-                        Forms\Components\TextInput::make('price')
-                            ->required()
-                            ->numeric()
-                            ->label('Price (SAR)')
-                            ->prefix('SAR')
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('double_room_price')
-                            ->required()
-                            ->numeric()
-                            ->label('Double Room Price (SAR)')
-                            ->prefix('SAR')
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('single_room_price')
-                            ->nullable()
-                            ->numeric()
-                            ->label('Single Room Price (SAR)')
-                            ->helperText('Optional')
-                            ->prefix('SAR')
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('rating')
-                            ->required()
-                            ->default(4.5)
-                            ->numeric()
-                            ->step(0.1)
-                            ->minValue(0)
-                            ->maxValue(5)
-                            ->label('Rating (0-5)')
-                            ->columnSpan(1),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Media & Status')
-                    ->schema([
-                        Forms\Components\FileUpload::make('image')
-                            ->image()
-                            ->imageEditor()
-                            ->imageEditorAspectRatios([
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->imageResizeMode('cover')
-                            ->imageCropAspectRatio('16:9')
-                            ->imageResizeTargetWidth('1200')
-                            ->imageResizeTargetHeight('675')
-                            ->maxSize(5120)
-                            ->directory('tourism')
-                            ->visibility('public')
-                            ->preserveFilenames()
-                            ->columnSpan(1)
-                            ->helperText('Upload a destination image. Recommended size: 1200x675px (16:9)')
-                            ->loadingIndicatorPosition('left')
-                            ->panelLayout('grid')
-                            ->uploadingMessage('Uploading image...'),
-                        Forms\Components\Toggle::make('active')
-                            ->label('Active')
-                            ->default(true)
-                            ->columnSpan(1),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Backend Controlled Data')
-                    ->schema([
-                        Forms\Components\TextInput::make('basic_info.trip_code')
-                            ->label('Trip Code')
-                            ->maxLength(50)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('basic_info.days_num')
-                            ->label('Days Num')
-                            ->numeric()
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('basic_info.destination_name_en')
-                            ->label('Destination Name (English)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('basic_info.destination_name_ar')
-                            ->label('Destination Name (Arabic)')
-                            ->maxLength(255)
-                            ->columnSpan(1),
-                        Forms\Components\DatePicker::make('basic_info.available_to')
-                            ->label('Available To')
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('basic_info.double_room_price')
-                            ->label('Double Room Price (SAR)')
-                            ->numeric()
-                            ->prefix('SAR')
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('basic_info.single_room_price')
-                            ->label('Single Room Price (SAR)')
-                            ->numeric()
-                            ->prefix('SAR')
-                            ->columnSpan(1),
-
-                        Forms\Components\TextInput::make('contact_info.address')
-                            ->label('Contact Address')
-                            ->maxLength(255)
-                            ->columnSpan(2),
-                        Forms\Components\TextInput::make('contact_info.phone')
-                            ->label('Contact Phone')
-                            ->tel()
-                            ->maxLength(20)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('contact_info.whatsapp')
-                            ->label('WhatsApp')
-                            ->tel()
-                            ->maxLength(20)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('contact_info.email')
-                            ->label('Contact Email')
-                            ->email()
-                            ->maxLength(100)
-                            ->columnSpan(2),
-
-                        Forms\Components\Repeater::make('payment_methods')
-                            ->label('Payment Methods')
-                            ->formatStateUsing(function ($state) {
-                                if (is_string($state)) {
-                                    $decoded = json_decode($state, true);
-                                    if (is_array($decoded)) {
-                                        return $decoded;
-                                    }
-                                }
-                                if (is_null($state)) {
-                                    return [];
-                                }
-                                return is_array($state) ? $state : [];
-                            })
-                            ->dehydrateStateUsing(function ($state) {
-                                if (is_string($state)) {
-                                    $decoded = json_decode($state, true);
-                                    if (is_array($decoded)) {
-                                        return $decoded;
-                                    }
-                                }
-                                if (is_array($state)) {
-                                    return $state;
-                                }
-                                return [];
-                            })
+                Forms\Components\Tabs::make('International Destination Details')
+                    ->tabs([
+                        // ============ BASIC INFO TAB ============
+                        Forms\Components\Tabs\Tab::make('Basic Info')
                             ->schema([
-                                Forms\Components\TextInput::make('name_en')
-                                    ->label('Name (English)')
-                                    ->maxLength(255)
-                                    ->columnSpan(1),
-                                Forms\Components\TextInput::make('name_ar')
-                                    ->label('Name (Arabic)')
-                                    ->maxLength(255)
-                                    ->columnSpan(1),
-                                Forms\Components\TextInput::make('account_no')
-                                    ->label('Account Number')
-                                    ->maxLength(50)
-                                    ->columnSpan(1),
-                                Forms\Components\TextInput::make('iban')
-                                    ->label('IBAN')
-                                    ->maxLength(50)
-                                    ->columnSpan(1),
-                            ])
-                            ->defaultItems(0)
-                            ->collapsible()
-                            ->createItemButtonLabel('Add Payment Method')
-                            ->columns(2)
-                            ->columnSpanFull(),
-                    ])->columns(2),
+                                Forms\Components\Section::make('Basic Details')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('slug')
+                                            ->required()
+                                            ->unique(ignoreRecord: true)
+                                            ->maxLength(255)
+                                            ->columnSpan(1),
+                                        Forms\Components\Select::make('region')
+                                            ->options([
+                                                'europe' => 'Europe',
+                                                'asia' => 'Asia',
+                                                'africa' => 'Africa',
+                                                'australia' => 'Australia & New Zealand',
+                                                'america' => 'America',
+                                            ])
+                                            ->required()
+                                            ->columnSpan(1),
+                                        Forms\Components\TextInput::make('trip_code')
+                                            ->label('Trip Code')
+                                            ->maxLength(255)
+                                            ->columnSpan(1),
+                                        Forms\Components\DatePicker::make('available_to')
+                                            ->label('Available To')
+                                            ->columnSpan(1),
+                                    ])->columns(2),
+                            ]),
+
+                        // ============ ENGLISH CONTENT TAB ============
+                        Forms\Components\Tabs\Tab::make('English Content')
+                            ->schema([
+                                Forms\Components\Section::make('English Specifications')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('title_en')
+                                            ->required()
+                                            ->label('Title (English)')
+                                            ->maxLength(255),
+                                        Forms\Components\Textarea::make('description_en')
+                                            ->label('Short Description (English)')
+                                            ->rows(3),
+                                        Forms\Components\RichEditor::make('long_description_en')
+                                            ->label('Long Description (English)')
+                                            ->toolbarButtons([
+                                                'bold', 'italic', 'underline', 'strike',
+                                                'blockquote', 'bulletList', 'orderedList',
+                                                'link', 'image', 'undo', 'redo',
+                                            ]),
+                                        Forms\Components\TextInput::make('location_en')
+                                            ->label('Location (English)')
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('duration_en')
+                                            ->label('Duration (English)')
+                                            ->maxLength(255),
+                                        
+                                        Forms\Components\Textarea::make('features_en')
+                                            ->label('Features (English)')
+                                            ->placeholder('Enter one feature per line')
+                                            ->rows(4)
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
+                                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
+
+                                        Forms\Components\Textarea::make('includes_en')
+                                            ->label('Package Includes (English)')
+                                            ->placeholder('Enter one item per line')
+                                            ->rows(4)
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
+                                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
+
+                                        Forms\Components\Textarea::make('not_includes_en')
+                                            ->label('Package Not Includes (English)')
+                                            ->placeholder('Enter one item per line')
+                                            ->rows(4)
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
+                                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
+
+                                        Forms\Components\Textarea::make('itinerary_en')
+                                            ->label('Itinerary (English)')
+                                            ->placeholder('Format: Day|Title|Description (one day per line)')
+                                            ->rows(6)
+                                            ->formatStateUsing(function ($state) {
+                                                $items = is_array($state) ? $state : (is_string($state) ? json_decode($state, true) ?? [] : []);
+                                                $lines = [];
+                                                foreach ($items as $item) {
+                                                    $lines[] = ($item['day'] ?? '') . '|' . ($item['title'] ?? '') . '|' . ($item['description'] ?? '');
+                                                }
+                                                return implode("\n", $lines);
+                                            })
+                                            ->dehydrateStateUsing(function ($state) {
+                                                if (is_string($state)) {
+                                                    $lines = array_filter(array_map('trim', explode("\n", $state)));
+                                                    $result = [];
+                                                    foreach ($lines as $line) {
+                                                        $parts = explode('|', $line);
+                                                        $result[] = [
+                                                            'day' => trim($parts[0] ?? ''),
+                                                            'title' => trim($parts[1] ?? ''),
+                                                            'description' => trim($parts[2] ?? ''),
+                                                        ];
+                                                    }
+                                                    return array_values($result);
+                                                }
+                                                return $state;
+                                            }),
+                                    ]),
+                            ]),
+
+                        // ============ ARABIC CONTENT TAB ============
+                        Forms\Components\Tabs\Tab::make('Arabic Content')
+                            ->schema([
+                                Forms\Components\Section::make('Arabic Specifications')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('title_ar')
+                                            ->required()
+                                            ->label('Title (Arabic)')
+                                            ->maxLength(255),
+                                        Forms\Components\Textarea::make('description_ar')
+                                            ->label('Short Description (Arabic)')
+                                            ->rows(3),
+                                        Forms\Components\RichEditor::make('long_description_ar')
+                                            ->label('Long Description (Arabic)')
+                                            ->toolbarButtons([
+                                                'bold', 'italic', 'underline', 'strike',
+                                                'blockquote', 'bulletList', 'orderedList',
+                                                'link', 'image', 'undo', 'redo',
+                                            ]),
+                                        Forms\Components\TextInput::make('location_ar')
+                                            ->label('Location (Arabic)')
+                                            ->maxLength(255),
+                                        Forms\Components\TextInput::make('duration_ar')
+                                            ->label('Duration (Arabic)')
+                                            ->maxLength(255),
+
+                                        Forms\Components\Textarea::make('features_ar')
+                                            ->label('Features (Arabic)')
+                                            ->placeholder('أدخل كل ميزة في سطر منفصل')
+                                            ->rows(4)
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
+                                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
+
+                                        Forms\Components\Textarea::make('includes_ar')
+                                            ->label('Package Includes (Arabic)')
+                                            ->placeholder('أدخل كل عنصر في سطر منفصل')
+                                            ->rows(4)
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
+                                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
+
+                                        Forms\Components\Textarea::make('not_includes_ar')
+                                            ->label('Package Not Includes (Arabic)')
+                                            ->placeholder('أدخل كل عنصر في سطر منفصل')
+                                            ->rows(4)
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? implode("\n", $state) : (is_string($state) ? implode("\n", json_decode($state, true) ?? [$state]) : ''))
+                                            ->dehydrateStateUsing(fn ($state) => is_string($state) ? array_values(array_filter(array_map('trim', explode("\n", $state)))) : $state),
+
+                                        Forms\Components\Textarea::make('itinerary_ar')
+                                            ->label('Itinerary (Arabic)')
+                                            ->placeholder('التنسيق: Day|Title|Description (يوم في كل سطر)')
+                                            ->rows(6)
+                                            ->formatStateUsing(function ($state) {
+                                                $items = is_array($state) ? $state : (is_string($state) ? json_decode($state, true) ?? [] : []);
+                                                $lines = [];
+                                                foreach ($items as $item) {
+                                                    $lines[] = ($item['day'] ?? '') . '|' . ($item['title'] ?? '') . '|' . ($item['description'] ?? '');
+                                                }
+                                                return implode("\n", $lines);
+                                            })
+                                            ->dehydrateStateUsing(function ($state) {
+                                                if (is_string($state)) {
+                                                    $lines = array_filter(array_map('trim', explode("\n", $state)));
+                                                    $result = [];
+                                                    foreach ($lines as $line) {
+                                                        $parts = explode('|', $line);
+                                                        $result[] = [
+                                                            'day' => trim($parts[0] ?? ''),
+                                                            'title' => trim($parts[1] ?? ''),
+                                                            'description' => trim($parts[2] ?? ''),
+                                                        ];
+                                                    }
+                                                    return array_values($result);
+                                                }
+                                                return $state;
+                                            }),
+                                    ]),
+                            ]),
+
+                        // ============ IMAGES TAB ============
+                        Forms\Components\Tabs\Tab::make('Images')
+                            ->schema([
+                                Forms\Components\Section::make('Media Assets')
+                                    ->schema([
+                                        Forms\Components\FileUpload::make('image')
+                                            ->image()
+                                            ->imageEditor()
+                                            ->imageEditorAspectRatios(['16:9', '4:3', '1:1'])
+                                            ->imageResizeMode('cover')
+                                            ->imageCropAspectRatio('16:9')
+                                            ->imageResizeTargetWidth('1200')
+                                            ->imageResizeTargetHeight('675')
+                                            ->maxSize(5120)
+                                            ->directory('tourism')
+                                            ->visibility('public')
+                                            ->preserveFilenames()
+                                            ->helperText('Upload a destination image. Recommended size: 1200x675px (16:9)')
+                                            ->loadingIndicatorPosition('left')
+                                            ->panelLayout('grid')
+                                            ->uploadingMessage('Uploading image...'),
+
+                                        Forms\Components\FileUpload::make('images')
+                                            ->label('Gallery Images')
+                                            ->multiple()
+                                            ->directory('tourism-gallery')
+                                            ->visibility('public')
+                                            ->preserveFilenames()
+                                            ->helperText('Upload multiple gallery images.')
+                                            ->panelLayout('grid'),
+                                    ]),
+                            ]),
+
+                        // ============ PRICING & RATING TAB ============
+                        Forms\Components\Tabs\Tab::make('Pricing & Rating')
+                            ->schema([
+                                Forms\Components\Section::make('Pricing Configurations')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('price')
+                                            ->required()
+                                            ->numeric()
+                                            ->label('Package Price (for 2 Persons) (SAR)')
+                                            ->prefix('SAR')
+                                            ->columnSpan(1),
+                                        Forms\Components\TextInput::make('single_room_price')
+                                            ->nullable()
+                                            ->numeric()
+                                            ->label('Single Supplement Price (for 1 Person) (SAR)')
+                                            ->helperText('Optional')
+                                            ->prefix('SAR')
+                                            ->columnSpan(1),
+                                        Forms\Components\TextInput::make('rating')
+                                            ->required()
+                                            ->default(4.5)
+                                            ->numeric()
+                                            ->step(0.1)
+                                            ->minValue(0)
+                                            ->maxValue(5)
+                                            ->label('Rating (0-5)')
+                                            ->columnSpan(1),
+                                    ])->columns(2),
+                            ]),
+
+                        // ============ STATUS TAB ============
+                        Forms\Components\Tabs\Tab::make('Status')
+                            ->schema([
+                                Forms\Components\Section::make('Status Controls')
+                                    ->schema([
+                                        Forms\Components\Toggle::make('active')
+                                            ->label('Active')
+                                            ->default(true)
+                                            ->columnSpan(1),
+                                    ])->columns(2),
+                            ]),
+                    ])->columnSpanFull(),
             ]);
     }
 

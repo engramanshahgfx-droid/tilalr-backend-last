@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\TourismDestination;
-use App\Http\Resources\TourismDestinationResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,11 +17,13 @@ class TourismDestinationController extends Controller
             $query->where('region', $request->region);
         }
 
-        $destinations = $query->get();
+        $destinations = $query->get()->map(function ($destination) {
+            return $this->formatDestination($destination);
+        });
 
         return response()->json([
             'success' => true,
-            'data' => TourismDestinationResource::collection($destinations),
+            'data' => $destinations
         ]);
     }
 
@@ -34,7 +35,7 @@ class TourismDestinationController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new TourismDestinationResource($destination),
+            'data' => $this->formatDestination($destination)
         ]);
     }
 
@@ -42,11 +43,14 @@ class TourismDestinationController extends Controller
     {
         $destinations = TourismDestination::where('region', $region)
             ->where('active', true)
-            ->get();
+            ->get()
+            ->map(function ($destination) {
+                return $this->formatDestination($destination);
+            });
 
         return response()->json([
             'success' => true,
-            'data' => TourismDestinationResource::collection($destinations),
+            'data' => $destinations
         ]);
     }
 
@@ -102,46 +106,35 @@ class TourismDestinationController extends Controller
     {
         $destinations = TourismDestination::where('active', true)->get();
 
-        $regionIcons = [
-            'europe' => '🌍',
-            'asia' => '🌏',
-            'africa' => '🌍',
-            'australia' => '🌏',
-            'america' => '🌎',
-        ];
-
-        $regionArabic = [
-            'europe' => 'أوروبا',
-            'asia' => 'آسيا',
-            'africa' => 'أفريقيا',
-            'australia' => 'أستراليا ونيوزيلندا',
-            'america' => 'أمريكا',
-        ];
-
-        $regionEnglish = [
-            'europe' => 'Europe',
-            'asia' => 'Asia',
-            'africa' => 'Africa',
-            'australia' => 'Australia & New Zealand',
-            'america' => 'America',
-        ];
-
         $grouped = [];
         foreach ($destinations as $dest) {
-            $regionKey = strtolower($dest->region ?? 'other');
+            $region = $dest->region ?? 'other';
 
-            if (!isset($grouped[$regionKey])) {
-                $grouped[$regionKey] = [
-                    'icon' => $regionIcons[$regionKey] ?? '🌍',
-                    'en' => $regionEnglish[$regionKey] ?? ucfirst($regionKey),
-                    'ar' => $regionArabic[$regionKey] ?? ucfirst($regionKey),
+            $regionIcons = [
+                'Europe' => '🌍',
+                'Asia' => '🌏',
+                'Africa' => '🌍',
+                'Australia' => '🌏',
+            ];
+
+            $regionArabic = [
+                'Europe' => 'أوروبا',
+                'Asia' => 'آسيا',
+                'Africa' => 'أفريقيا',
+                'Australia' => 'أستراليا ونيوزيلندا',
+            ];
+
+            if (!isset($grouped[$region])) {
+                $grouped[$region] = [
+                    'icon' => $regionIcons[$region] ?? '🌍',
+                    'ar' => $regionArabic[$region] ?? ucfirst($region),
                     'countries' => []
                 ];
             }
 
-            $grouped[$regionKey]['countries'][] = [
-                'en' => $dest->title_en ?: $dest->location_en,
-                'ar' => $dest->title_ar ?: $dest->location_ar,
+            $grouped[$region]['countries'][] = [
+                'en' => $dest->title_en,
+                'ar' => $dest->title_ar,
                 'slug' => $dest->slug,
             ];
         }

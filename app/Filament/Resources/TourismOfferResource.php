@@ -29,13 +29,13 @@ class TourismOfferResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Tourism';
     protected static ?string $label = 'Tourism Offer';
-    protected static ?string $pluralLabel = 'Tourism Offers';
+    protected static ?string $pluralLabel = 'Saudi Offers';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Tabs::make('Tourism Offer Details')
+                Tabs::make('Saudi Offer Details')
                     ->tabs([
                         // ============ BASIC INFO TAB ============
                         Tabs\Tab::make('Basic Info')
@@ -479,56 +479,7 @@ class TourismOfferResource extends Resource
                                     ])->columns(2),
                             ]),
 
-                        // ============ CONTACT INFO TAB ============
-                        Tabs\Tab::make('Contact & Payments')
-                            ->schema([
-                                Section::make('Contact Information')
-                                    ->schema([
-                                        KeyValue::make('contact_info')
-                                            ->label('Contact Details')
-                                            ->keyLabel('Field')
-                                            ->valueLabel('Value')
-                                            ->default([
-                                                'address' => 'al Rabwa Jeddah',
-                                                'phone' => '966547305060',
-                                                'whatsapp' => '966547305060',
-                                                'email' => 'info@tilalr.com',
-                                            ])
-                                            ->helperText('Add contact details like address, phone, WhatsApp, email'),
-                                    ]),
 
-                                Section::make('Payment Methods')
-                                    ->schema([
-                                        // FIX: Use Textarea instead of Repeater for payment_methods
-                                        Textarea::make('payment_methods')
-                                            ->label('Payment Methods (JSON)')
-                                            ->placeholder('Enter payment methods in JSON format')
-                                            ->rows(10)
-                                            ->helperText('Format: [{"name":"Bank Name","account_no":"123","iban":"SA..."}]')
-                                            ->formatStateUsing(function ($state) {
-                                                if (is_string($state)) {
-                                                    return $state;
-                                                }
-                                                if (is_array($state)) {
-                                                    return json_encode($state, JSON_PRETTY_PRINT);
-                                                }
-                                                return json_encode([
-                                                    [
-                                                    ]
-
-                                                ], JSON_PRETTY_PRINT);
-                                            })
-                                            ->dehydrateStateUsing(function ($state) {
-                                                if (is_string($state)) {
-                                                    return $state;
-                                                }
-                                                if (is_array($state)) {
-                                                    return json_encode($state);
-                                                }
-                                                return $state;
-                                            }),
-                                    ]),
-                            ]),
 
                         // ============ STATUS TAB ============
                         Tabs\Tab::make('Status')
@@ -591,27 +542,7 @@ class TourismOfferResource extends Resource
                                     ])->columns(1),
                             ]),
 
-                        // ============ BASIC INFO JSON TAB ============
-                        Tabs\Tab::make('Basic Info (JSON)')
-                            ->schema([
-                                Section::make('Basic Information (JSON)')
-                                    ->schema([
-                                        KeyValue::make('basic_info')
-                                            ->label('Basic Information')
-                                            ->keyLabel('Field')
-                                            ->valueLabel('Value')
-                                            ->default([
-                                                'trip_code' => 'TRIP-001',
-                                                'days_num' => '7',
-                                                'destination_name' => 'Maldives',
-                                                'available_to' => '2025-12-31',
-                                                'double_room' => '2500',
-                                                'single_room' => '1800',
-                                            ])
-                                            ->helperText('Add trip code, days, availability, and pricing details'),
-                                    ]),
-                            ]),
-                    ])->columnSpanFull(),
+                     ])->columnSpanFull(),
             ]);
     }
 

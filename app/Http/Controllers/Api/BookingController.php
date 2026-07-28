@@ -22,7 +22,7 @@ class BookingController extends Controller
             'email' => 'required|email|max:255',
             'mobile' => 'required|string|max:20',
             'travel_date' => 'required|date_format:Y-m-d',
-            'room_type' => 'required|in:DoubleRoom,SingleRoom',
+            'room_type' => 'nullable|string',
             'package_id' => 'nullable|string',
             'package_code' => 'nullable|string',
             'package_title' => 'nullable|string',
@@ -53,7 +53,8 @@ class BookingController extends Controller
         $bookingType = $request->booking_type ?? 'destination';
         $package = null;
         $packageTitle = 'Unknown Package';
-        $price = 0;
+        $doubleRoomPrice = 0;
+        $singleRoomPrice = 0;
         $basicInfo = [];
 
         if ($bookingType === 'tourism_offer') {
@@ -64,20 +65,13 @@ class BookingController extends Controller
 
             if ($package) {
                 $packageTitle = $package->title_en ?? $package->title_ar ?? 'Tourism Offer';
-                $price = $package->price ?? 0;
+                $packagePrice = floatval($package->price ?? 0);
+                $singleSupplementPrice = floatval($package->single_room_price ?? $packagePrice);
             } else {
-                // If not found in database, use data from frontend request
-                // This allows bookings for offers that exist on frontend but not yet in database
                 $packageTitle = $request->package_title ?? 'Tourism Offer';
+                $packagePrice = floatval($request->price ?? $request->total_amount ?? 0);
+                $singleSupplementPrice = floatval($request->price ?? $request->total_amount ?? 0);
             }
-
-            if ($request->filled('price') && is_numeric($request->price)) {
-                $price = $request->price;
-            }
-
-            $totalAmount = $request->filled('total_amount') && is_numeric($request->total_amount)
-                ? $request->total_amount
-                : $price;
         } else {
             // For destinations, require the package to exist
             $package = TourismDestination::where('id', $request->package_id)
@@ -86,38 +80,8 @@ class BookingController extends Controller
 
             if ($package) {
                 $packageTitle = $package->title_en ?? $package->title_ar ?? 'Destination';
-                if (is_string($package->basic_info)) {
-                    $basicInfo = json_decode($package->basic_info, true);
-                } else {
-                    $basicInfo = $package->basic_info ?? [];
-                }
-                $doubleRoomPrice = 0;
-                if (!empty($basicInfo['double_room']) && doubleval($basicInfo['double_room']) > 0) {
-                    $doubleRoomPrice = doubleval($basicInfo['double_room']);
-                } elseif (!empty($basicInfo['doubleRoom']) && doubleval($basicInfo['doubleRoom']) > 0) {
-                    $doubleRoomPrice = doubleval($basicInfo['doubleRoom']);
-                } elseif (!empty($package->double_room_price) && doubleval($package->double_room_price) > 0) {
-                    $doubleRoomPrice = doubleval($package->double_room_price);
-                } else {
-                    $doubleRoomPrice = doubleval($package->price ?? 0);
-                }
-
-                $singleRoomPrice = 0;
-                if (!empty($basicInfo['single_room']) && doubleval($basicInfo['single_room']) > 0) {
-                    $singleRoomPrice = doubleval($basicInfo['single_room']);
-                } elseif (!empty($basicInfo['singleRoom']) && doubleval($basicInfo['singleRoom']) > 0) {
-                    $singleRoomPrice = doubleval($basicInfo['singleRoom']);
-                } elseif (!empty($package->single_room_price) && doubleval($package->single_room_price) > 0) {
-                    $singleRoomPrice = doubleval($package->single_room_price);
-                } elseif (!empty($package->double_room_price) && doubleval($package->double_room_price) > 0) {
-                    $singleRoomPrice = doubleval($package->double_room_price);
-                } else {
-                    $singleRoomPrice = doubleval($package->price ?? 0);
-                }
-
-                $price = $request->room_type === 'DoubleRoom'
-                    ? $doubleRoomPrice
-                    : $singleRoomPrice;
+                $packagePrice = floatval($package->price ?? 0);
+                $singleSupplementPrice = floatval($package->single_room_price ?? $packagePrice);
             } else {
                 \Log::warning('Package not found for ID/Slug: ' . $request->package_id);
                 return response()->json([
@@ -128,16 +92,15 @@ class BookingController extends Controller
         }
 
         $guests = max(1, intval($request->guests ?? 1));
-        $totalAmount = $price;
 
-        if ($request->room_type === 'DoubleRoom') {
-            if ($guests > 2) {
-                $extraGuests = $guests - 2;
-                $totalAmount = $price + ($extraGuests * $price * 0.5);
-            }
+        if ($bookingType === 'tourism_offer') {
+            $totalAmount = $packagePrice * $guests;
         } else {
-            $totalAmount = $price * $guests;
+            $evenPackages = floor($guests / 2);
+            $singleSupplementCount = $guests % 2;
+            $totalAmount = ($evenPackages * $packagePrice) + ($singleSupplementCount * $singleSupplementPrice);
         }
+        $price = $packagePrice;
 
         if ($totalAmount <= 0) {
             return response()->json([
