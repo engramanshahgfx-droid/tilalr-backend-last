@@ -106,8 +106,7 @@ class TourismOfferSeeder extends Seeder
                     [
                         'name_en' => 'Al Rajhi Bank',
                         'name_ar' => 'مصرف الراجحي',
-                        'account_no' => '1111',
-                        'iban' => '1111111',
+                        'iban' => 'SA67 8000 0189 6080 1000 4821',
                     ],
                     [
                         'name_en' => 'STC Pay',
