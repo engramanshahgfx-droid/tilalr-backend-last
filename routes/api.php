@@ -181,7 +181,7 @@ Route::get('/special-offers/simple', [SpecialOfferController::class, 'simple']);
 Route::get('/visa-countries', [VisaCountryController::class, 'index']);
 Route::get('/visa-countries/{slug}', [VisaCountryController::class, 'show']);
 
-// E-Visa
+// E-Visas
 Route::get('/evisa-applications', [EvisaController::class, 'index']);
 Route::get('/evisa-applications/{id}', [EvisaController::class, 'show']);
 Route::post('/evisa-applications', [EvisaController::class, 'store']);
