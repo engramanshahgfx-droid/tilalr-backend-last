@@ -260,17 +260,31 @@ class TourismDestinationResource extends Resource
                             ->schema([
                                 Forms\Components\Section::make('Pricing Configurations')
                                     ->schema([
+                                        Forms\Components\Repeater::make('person_prices')
+                                            ->label('Person Offers & Pricing (Dynamic)')
+                                            ->schema([
+                                                Forms\Components\TextInput::make('persons')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->minValue(1)
+                                                    ->label('Number of Persons (e.g., 1, 2, 3, 4...)')
+                                                    ->placeholder('1'),
+                                                Forms\Components\TextInput::make('price')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->prefix('SAR')
+                                                    ->label('Price for this Offer (SAR)')
+                                                    ->placeholder('2500.00'),
+                                            ])
+                                            ->columns(2)
+                                            ->defaultItems(1)
+                                            ->createItemButtonLabel('Add New Person Offer')
+                                            ->columnSpanFull()
+                                            ->helperText('Add custom price tiers based on the number of persons (e.g. 1 Person = 2500 SAR, 2 Persons = 4000 SAR, etc.)'),
                                         Forms\Components\TextInput::make('price')
-                                            ->required()
-                                            ->numeric()
-                                            ->label('Package Price (for 2 Persons) (SAR)')
-                                            ->prefix('SAR')
-                                            ->columnSpan(1),
-                                        Forms\Components\TextInput::make('single_room_price')
                                             ->nullable()
                                             ->numeric()
-                                            ->label('Single Supplement Price (for 1 Person) (SAR)')
-                                            ->helperText('Optional')
+                                            ->label('Base Starting Price (SAR)')
                                             ->prefix('SAR')
                                             ->columnSpan(1),
                                         Forms\Components\TextInput::make('rating')

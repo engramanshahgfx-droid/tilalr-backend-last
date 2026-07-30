@@ -42,8 +42,7 @@ class TourismDestination extends Model
         'region',
         'trip_code',
         'available_to',
-        'double_room_price',
-        'single_room_price',
+        'person_prices',
         'active',
     ];
 
@@ -60,13 +59,26 @@ class TourismDestination extends Model
         'basic_info' => 'array',
         'contact_info' => 'array',
         'payment_methods' => 'array',
+        'person_prices' => 'array',
         'price' => 'decimal:2',
-        'double_room_price' => 'decimal:2',
-        'single_room_price' => 'decimal:2',
         'rating' => 'float',
         'available_to' => 'date',
         'active' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function ($model) {
+            if (!empty($model->person_prices) && is_array($model->person_prices)) {
+                $firstOffer = $model->person_prices[0] ?? null;
+                if ($firstOffer && isset($firstOffer['price'])) {
+                    if (empty($model->price) || floatval($model->price) == 0) {
+                        $model->price = floatval($firstOffer['price']);
+                    }
+                }
+            }
+        });
+    }
 
     public function getRouteKeyName()
     {

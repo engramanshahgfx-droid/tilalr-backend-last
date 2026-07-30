@@ -55,6 +55,7 @@ class TourismOffer extends Model
         'meta_description_ar',
         'meta_keywords_en',
         'meta_keywords_ar',
+        'person_prices',
     ];
 
     protected $casts = [
@@ -63,12 +64,27 @@ class TourismOffer extends Model
         'basic_info'      => 'array',
         'contact_info'    => 'array',
         'payment_methods' => 'array',
+        'person_prices'   => 'array',
         'active'          => 'boolean',
         'popular'         => 'boolean',
         'limited'         => 'boolean',
         // NOTE: features_en/ar, includes_en/ar, not_includes_en/ar, itinerary_en/ar
         // are stored as DOUBLE-encoded JSON strings and handled by explicit accessors/mutators below.
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function ($model) {
+            if (!empty($model->person_prices) && is_array($model->person_prices)) {
+                $firstOffer = $model->person_prices[0] ?? null;
+                if ($firstOffer && isset($firstOffer['price'])) {
+                    if (empty($model->price) || floatval($model->price) == 0) {
+                        $model->price = floatval($firstOffer['price']);
+                    }
+                }
+            }
+        });
+    }
 
     // =====================
     // Helper: decode possibly double-encoded JSON into array

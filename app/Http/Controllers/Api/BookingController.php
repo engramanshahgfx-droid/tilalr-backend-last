@@ -93,14 +93,12 @@ class BookingController extends Controller
 
         $guests = max(1, intval($request->guests ?? 1));
 
-        if ($bookingType === 'tourism_offer') {
-            $totalAmount = $packagePrice * $guests;
+        if ($request->filled('total_amount') && floatval($request->total_amount) > 0) {
+            $totalAmount = floatval($request->total_amount);
         } else {
-            $evenPackages = floor($guests / 2);
-            $singleSupplementCount = $guests % 2;
-            $totalAmount = ($evenPackages * $packagePrice) + ($singleSupplementCount * $singleSupplementPrice);
+            $totalAmount = $packagePrice * $guests;
         }
-        $price = $packagePrice;
+        $price = $packagePrice > 0 ? $packagePrice : ($totalAmount / $guests);
 
         if ($totalAmount <= 0) {
             return response()->json([

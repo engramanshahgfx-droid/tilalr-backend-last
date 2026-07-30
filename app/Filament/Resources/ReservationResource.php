@@ -344,22 +344,27 @@ class ReservationResource extends Resource
                             ->prefix('SAR'),
                     ])
                     ->action(function (Reservation $record, array $data) {
-                        $booking = \App\Models\Booking::create([
-                            'user_id' => null,
-                            'date' => $record->preferred_date,
-                            'guests' => $record->guests,
-                            'details' => array_merge($record->details ?? [], [
-                                'trip_slug' => $record->trip_slug,
-                                'trip_title' => $record->trip_title,
-                                'name' => $record->name,
-                                'email' => $record->email,
-                                'phone' => $record->phone,
-                                'amount' => $data['amount'],
-                                'converted_from_reservation' => $record->id,
-                            ]),
-                            'status' => 'pending',
-                            'payment_status' => 'pending',
-                        ]);
+                         $booking = \App\Models\Booking::create([
+                             'booking_number' => \App\Models\Booking::generateBookingNumber(),
+                             'user_id' => null,
+                             'first_name' => $record->name,
+                             'last_name' => '',
+                             'email' => $record->email,
+                             'mobile' => $record->phone,
+                             'date' => $record->preferred_date,
+                             'guests' => $record->guests,
+                             'details' => array_merge($record->details ?? [], [
+                                 'trip_slug' => $record->trip_slug,
+                                 'trip_title' => $record->trip_title,
+                                 'name' => $record->name,
+                                 'email' => $record->email,
+                                 'phone' => $record->phone,
+                                 'amount' => $data['amount'],
+                                 'converted_from_reservation' => $record->id,
+                             ]),
+                             'status' => 'pending',
+                             'payment_status' => 'pending',
+                         ]);
                         
                         $record->update([
                             'status' => 'converted',

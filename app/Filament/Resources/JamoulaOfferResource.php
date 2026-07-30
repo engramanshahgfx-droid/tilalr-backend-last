@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TourismOfferResource\Pages;
-use App\Models\TourismOffer;
+use App\Filament\Resources\JamoulaOfferResource\Pages;
+use App\Models\JamoulaOffer;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,19 +23,19 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
 
-class TourismOfferResource extends Resource
+class JamoulaOfferResource extends Resource
 {
-    protected static ?string $model = TourismOffer::class;
+    protected static ?string $model = JamoulaOffer::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationGroup = 'Tourism';
-    protected static ?string $label = 'Tourism Offer';
-    protected static ?string $pluralLabel = 'Saudi  Offers';
+    protected static ?string $navigationGroup = 'Jamoula';
+    protected static ?string $label = 'Jamoula Offer';
+    protected static ?string $pluralLabel = 'Jamoula Offers';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Tabs::make('Saudi Offer Details')
+                Tabs::make('Jamoula Offer Details')
                     ->tabs([
                         // ============ BASIC INFO TAB ============
                         Tabs\Tab::make('Basic Info')
@@ -46,7 +46,7 @@ class TourismOfferResource extends Resource
                                             ->required()
                                             ->unique(ignoreRecord: true)
                                             ->maxLength(255)
-                                            ->helperText('Unique URL identifier (e.g., maldives-paradise)'),
+                                            ->helperText('Unique URL identifier (e.g., jamoula-special)'),
 
                                         TextInput::make('type')
                                             ->required()
@@ -105,7 +105,7 @@ class TourismOfferResource extends Resource
                                             ->placeholder('e.g., 2-4 People'),
 
                                         Textarea::make('features_en')
-                                            ->label('Package Includes (English)')
+                                            ->label('Features (English)')
                                             ->placeholder('Enter each feature on a new line')
                                             ->rows(4)
                                             ->helperText('Enter one feature per line')
@@ -133,34 +133,34 @@ class TourismOfferResource extends Resource
                                                 return json_encode([]);
                                             }),
 
-                                        // Textarea::make('includes_en')
-                                        //     ->label('Package Includes (English)')
-                                        //     ->placeholder('Enter each include on a new line')
-                                        //     ->rows(4)
-                                        //     ->helperText('Enter one item per line')
-                                        //     ->formatStateUsing(function ($state) {
-                                        //         if (is_string($state)) {
-                                        //             $decoded = json_decode($state, true);
-                                        //             if (is_array($decoded)) {
-                                        //                 return implode("\n", $decoded);
-                                        //             }
-                                        //             return $state;
-                                        //         }
-                                        //         if (is_array($state)) {
-                                        //             return implode("\n", $state);
-                                        //         }
-                                        //         return '';
-                                        //     })
-                                        //     ->dehydrateStateUsing(function ($state) {
-                                        //         if (is_string($state)) {
-                                        //             $lines = array_filter(array_map('trim', explode("\n", $state)));
-                                        //             return json_encode(array_values($lines));
-                                        //         }
-                                        //         if (is_array($state)) {
-                                        //             return json_encode(array_values($state));
-                                        //         }
-                                        //         return json_encode([]);
-                                        //     }),
+                                        Textarea::make('includes_en')
+                                            ->label('Package Includes (English)')
+                                            ->placeholder('Enter each include on a new line')
+                                            ->rows(4)
+                                            ->helperText('Enter one item per line')
+                                            ->formatStateUsing(function ($state) {
+                                                if (is_string($state)) {
+                                                    $decoded = json_decode($state, true);
+                                                    if (is_array($decoded)) {
+                                                        return implode("\n", $decoded);
+                                                    }
+                                                    return $state;
+                                                }
+                                                if (is_array($state)) {
+                                                    return implode("\n", $state);
+                                                }
+                                                return '';
+                                            })
+                                            ->dehydrateStateUsing(function ($state) {
+                                                if (is_string($state)) {
+                                                    $lines = array_filter(array_map('trim', explode("\n", $state)));
+                                                    return json_encode(array_values($lines));
+                                                }
+                                                if (is_array($state)) {
+                                                    return json_encode(array_values($state));
+                                                }
+                                                return json_encode([]);
+                                            }),
 
                                         Textarea::make('not_includes_en')
                                             ->label('Package Not Includes (English)')
@@ -275,7 +275,7 @@ class TourismOfferResource extends Resource
                                             ->placeholder('e.g., ٢-٤ أشخاص'),
 
                                         Textarea::make('features_ar')
-                                            ->label('Package Includes (Arabic)')
+                                            ->label('Features (Arabic)')
                                             ->placeholder('Enter each feature on a new line')
                                             ->rows(4)
                                             ->helperText('Enter one feature per line')
@@ -417,7 +417,7 @@ class TourismOfferResource extends Resource
                                         FileUpload::make('image')
                                             ->label('Main Image')
                                             ->image()
-                                            ->directory('offers/main')
+                                            ->directory('jamoula/main')
                                             ->visibility('public')
                                             ->imageEditor()
                                             ->imageEditorAspectRatios([
@@ -431,7 +431,7 @@ class TourismOfferResource extends Resource
                                         FileUpload::make('gallery')
                                             ->label('Gallery Images')
                                             ->image()
-                                            ->directory('offers/gallery')
+                                            ->directory('jamoula/gallery')
                                             ->visibility('public')
                                             ->multiple()
                                             ->imageEditor()
@@ -445,31 +445,9 @@ class TourismOfferResource extends Resource
                             ->schema([
                                 Section::make('Pricing')
                                     ->schema([
-                                        Forms\Components\Repeater::make('person_prices')
-                                            ->label('Person Offers & Pricing (Dynamic)')
-                                            ->schema([
-                                                Forms\Components\TextInput::make('persons')
-                                                    ->numeric()
-                                                    ->required()
-                                                    ->minValue(1)
-                                                    ->label('Number of Persons (e.g., 1, 2, 3, 4...)')
-                                                    ->placeholder('1'),
-                                                Forms\Components\TextInput::make('price')
-                                                    ->numeric()
-                                                    ->required()
-                                                    ->prefix('SAR')
-                                                    ->label('Price for this Offer (SAR)')
-                                                    ->placeholder('2500.00'),
-                                            ])
-                                            ->columns(2)
-                                            ->defaultItems(1)
-                                            ->createItemButtonLabel('Add New Person Offer')
-                                            ->columnSpanFull()
-                                            ->helperText('Add custom price tiers based on number of persons (e.g. 1 Person = 2500 SAR, 2 Persons = 4000 SAR, etc.)'),
-
                                         TextInput::make('price')
-                                            ->label('Base Starting Price (SAR)')
-                                            ->nullable()
+                                            ->label('Price (SAR)')
+                                            ->required()
                                             ->numeric()
                                             ->prefix('SAR')
                                             ->default(0)
@@ -500,8 +478,6 @@ class TourismOfferResource extends Resource
                                             ->helperText('e.g., 4.8'),
                                     ])->columns(2),
                             ]),
-
-
 
                         // ============ STATUS TAB ============
                         Tabs\Tab::make('Status')
@@ -601,7 +577,7 @@ class TourismOfferResource extends Resource
 
                 TextColumn::make('price')
                     ->label('Price')
-                    ->money('SAR')
+                    ->suffix(' SAR')
                     ->sortable(),
 
                 TextColumn::make('rating')
@@ -669,10 +645,10 @@ class TourismOfferResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTourismOffers::route('/'),
-            'create' => Pages\CreateTourismOffer::route('/create'),
-            'edit' => Pages\EditTourismOffer::route('/{record}/edit'),
-            'view' => Pages\ViewTourismOffer::route('/{record}'),
+            'index' => Pages\ListJamoulaOffers::route('/'),
+            'create' => Pages\CreateJamoulaOffer::route('/create'),
+            'edit' => Pages\EditJamoulaOffer::route('/{record}/edit'),
+            'view' => Pages\ViewJamoulaOffer::route('/{record}'),
         ];
     }
 }

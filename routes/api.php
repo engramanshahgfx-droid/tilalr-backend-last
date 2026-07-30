@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TourismDestinationController;
 use App\Http\Controllers\Api\TourismOfferController;
+use App\Http\Controllers\Api\JamoulaOfferController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ProductController;
@@ -77,20 +78,6 @@ Route::get('/testimonials/{id}', [TestimonialController::class, 'show']);
 Route::get('/settings', [SettingController::class, 'index']);
 Route::get('/settings/{key}', [SettingController::class, 'show']);
 
-// International Travel API routes
-Route::get('/international/flights', [InternationalFlightController::class, 'index']);
-Route::get('/international/flights/{id}', [InternationalFlightController::class, 'show']);
-Route::get('/international/hotels', [InternationalHotelController::class, 'index']);
-Route::get('/international/hotels/{id}', [InternationalHotelController::class, 'show']);
-Route::get('/international/packages', [InternationalPackageController::class, 'index']);
-Route::get('/international/packages/{id}', [InternationalPackageController::class, 'show']);
-Route::post('/international/packages/activate', [InternationalPackageController::class, 'activate']);
-Route::get('/international/destinations', [InternationalDestinationController::class, 'index']);
-Route::get('/international/destinations/countries', [InternationalDestinationController::class, 'countries']);
-Route::get('/international/destinations/cities', [InternationalDestinationController::class, 'cities']);
-Route::get('/international/destinations/filter', [InternationalDestinationController::class, 'filter']);
-Route::get('/international/destinations/{id}', [InternationalDestinationController::class, 'show']);
-
 // Admin CRUD endpoints
 Route::post('/admin/offers', [\App\Http\Controllers\Api\OfferController::class, 'store']);
 Route::put('/admin/offers/{id}', [\App\Http\Controllers\Api\OfferController::class, 'update']);
@@ -125,6 +112,16 @@ Route::post('/payments/moyasar/initiate', [PaymentController::class, 'initiateMo
 // Tourism Offers Routes
 Route::get('/tourism-offers', [TourismOfferController::class, 'index']);
 Route::get('/tourism-offers/{id}', [TourismOfferController::class, 'show']);
+
+// Jamoula Offers Routes
+Route::get('/jamoula-offers', [JamoulaOfferController::class, 'index']);
+Route::get('/jamoula-offers/{id}', [JamoulaOfferController::class, 'show']);
+
+// Banners Routes
+Route::get('/banners', [\App\Http\Controllers\Api\BannerController::class, 'index']);
+
+// Partners/Logos Routes
+Route::get('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'index']);
 
 // Reservations
 Route::post('/reservations', [ReservationController::class, 'store']);
@@ -181,7 +178,7 @@ Route::get('/special-offers/simple', [SpecialOfferController::class, 'simple']);
 Route::get('/visa-countries', [VisaCountryController::class, 'index']);
 Route::get('/visa-countries/{slug}', [VisaCountryController::class, 'show']);
 
-// E-Visas
+// E-Visa
 Route::get('/evisa-applications', [EvisaController::class, 'index']);
 Route::get('/evisa-applications/{id}', [EvisaController::class, 'show']);
 Route::post('/evisa-applications', [EvisaController::class, 'store']);
@@ -192,14 +189,13 @@ Route::post('/custom-payment-offers/{uniqueLink}/payment-success', [CustomPaymen
 Route::get('/custom-payment-offers/{uniqueLink}/payment-success', [CustomPaymentOfferController::class, 'paymentSuccess']);
 Route::post('/custom-payment-offers/{uniqueLink}/payment-failed', [CustomPaymentOfferController::class, 'paymentFailed']);
 Route::post('/webhooks/moyasar/custom-payment', [CustomPaymentOfferController::class, 'moyasarWebhook']);
-// Guest Booking Routes (NO authentication required)
-
 
 Route::post('/bookings/guest', [BookingController::class, 'guestStore']);
 Route::get('/bookings/{id}/payment-details', [BookingController::class, 'paymentDetails']);
 Route::post('/payments/moyasar/initiate', [PaymentController::class, 'initiateMoyasarPayment']);
 Route::post('/payments/webhook/moyasar', [PaymentController::class, 'moyasarWebhook']);
 Route::get('/payments/status/{id}', [PaymentController::class, 'getPaymentStatus']);
+
 // ============================================
 // PROTECTED ROUTES (Require Authentication)
 // ============================================
@@ -224,19 +220,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments/initiate', [PaymentController::class, 'initiate']);
     Route::get('/payments', [PaymentController::class, 'index']);
     Route::get('/payments/{id}', [PaymentController::class, 'show']);
-
-Route::post('/international/flights', [InternationalFlightController::class, 'store']);
-    Route::put('/international/flights/{id}', [InternationalFlightController::class, 'update']);
-    Route::delete('/international/flights/{id}', [InternationalFlightController::class, 'destroy']);
-    Route::post('/international/hotels', [InternationalHotelController::class, 'store']);
-    Route::put('/international/hotels/{id}', [InternationalHotelController::class, 'update']);
-    Route::delete('/international/hotels/{id}', [InternationalHotelController::class, 'destroy']);
-    Route::post('/international/packages', [InternationalPackageController::class, 'store']);
-    Route::put('/international/packages/{id}', [InternationalPackageController::class, 'update']);
-    Route::delete('/international/packages/{id}', [InternationalPackageController::class, 'destroy']);
-    Route::post('/international/destinations', [InternationalDestinationController::class, 'store']);
-    Route::put('/international/destinations/{id}', [InternationalDestinationController::class, 'update']);
-    Route::delete('/international/destinations/{id}', [InternationalDestinationController::class, 'destroy']);
 
     // Schengen Admin
     Route::put('/admin/schengen-applications/{id}/status', [SchengenController::class, 'updateStatus']);
