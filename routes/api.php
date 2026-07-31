@@ -119,6 +119,7 @@ Route::get('/jamoula-offers/{id}', [JamoulaOfferController::class, 'show']);
 
 // Banners Routes
 Route::get('/banners', [\App\Http\Controllers\Api\BannerController::class, 'index']);
+Route::get('/headerbanners', [\App\Http\Controllers\Api\HeaderBannerController::class, 'index']);
 
 // Partners/Logos Routes
 Route::get('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'index']);

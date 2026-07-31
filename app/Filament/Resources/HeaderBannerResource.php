@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BannerResource\Pages;
-use App\Models\Banner;
+use App\Filament\Resources\HeaderBannerResource\Pages;
+use App\Models\HeaderBanner;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,13 +18,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
 
-class BannerResource extends Resource
+class HeaderBannerResource extends Resource
 {
-    protected static ?string $model = Banner::class;
-    protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-bar';
+    protected static ?string $model = HeaderBanner::class;
+    protected static ?string $navigationIcon = 'heroicon-o-photo';
     protected static ?string $navigationGroup = 'Settings';
-    protected static ?string $label = 'Banner';
-    protected static ?string $pluralLabel = 'Banners';
+    protected static ?string $label = 'Header Banner';
+    protected static ?string $pluralLabel = 'Header Banners';
 
     public static function canCreate(): bool
     {
@@ -35,19 +35,36 @@ class BannerResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Banner Assignment & Link')
+                Section::make('Header Banner Page Assignment & Link')
                     ->schema([
                         Select::make('page')
-                            ->label('Assigned Page / Slot')
+                            ->label('Assigned Page')
                             ->options([
-                                'home' => 'Home Page (Banner 1 / Index 0)',
-                                'offers' => 'Offers Page (Banner 2 / Index 1)',
-                                'visa' => 'Visa Page (Banner 3 / Index 2)',
-                                'destinations' => 'Destinations Page (Banner 4 / Index 3)',
+                                'home' => 'Home Page Header',
+                                'jamoula' => 'Jamoula Offers Header (/jamoulaoffers)',
+                                'offers' => 'Tourism Offers Header (/tousimoffers)',
+                                'destinations' => 'Destinations Header (/destinations)',
+                                'private-jet' => 'Private Jet Header (/international/private-jet)',
+                                'internet-packages' => 'Internet Packages Header (/international/internet-packages)',
+                                'visa' => 'Visas Header (/visa)',
+                                'saudi-visa' => 'Saudi Visa Header (/saudi-visa)',
+                                'evisa' => 'E-Visa Header (/E-visa)',
+                                'about-us' => 'About Us Header (/about-us)',
+                                'about-saudi' => 'About Saudi Header (/about-saudi)',
+                                'contact-us' => 'Contact Us Header (/contact-us)',
+                                'faq' => 'FAQ Header (/faq)',
+                                'transportation' => 'Transportation Header (/transportation)',
+                                'products' => 'Trips & Products Header (/products)',
+                                'travel-basics' => 'Travel Basics Header (/Travel-Basics)',
+                                'islands' => 'Islands Header (/islands)',
+                                'terms' => 'Terms & Conditions Header (/terms)',
+                                'privacy' => 'Privacy Policy Header (/privacy)',
+                                'cancellation-policy' => 'Cancellation Policy Header (/cancellation-policy)',
+                                'refund-policy' => 'Refund Policy Header (/refund-policy)',
                             ])
                             ->nullable()
                             ->searchable()
-                            ->placeholder('Select Page or type custom identifier'),
+                            ->placeholder('Select assigned page or type custom page identifier'),
 
                         TextInput::make('url')
                             ->label('Redirect URL')
@@ -60,13 +77,13 @@ class BannerResource extends Resource
                             ->default(true),
                     ])->columns(3),
 
-                Section::make('Banner Image')
+                Section::make('Header Banner Image')
                     ->description('Upload single banner image optimized for responsive display across PC, Tablet, and Mobile devices.')
                     ->schema([
                         FileUpload::make('background_image')
                             ->label('Banner Image')
                             ->image()
-                            ->directory('banners')
+                            ->directory('header-banners')
                             ->visibility('public')
                             ->nullable()
                             ->maxSize(5120)
@@ -76,7 +93,7 @@ class BannerResource extends Resource
                 Section::make('Localization (English)')
                     ->schema([
                         TextInput::make('sentence_en')
-                            ->label('Banner Text (English)')
+                            ->label('Header Banner Text (English)')
                             ->nullable()
                             ->maxLength(255),
 
@@ -89,7 +106,7 @@ class BannerResource extends Resource
                 Section::make('Localization (Arabic)')
                     ->schema([
                         TextInput::make('sentence_ar')
-                            ->label('Banner Text (Arabic)')
+                            ->label('Header Banner Text (Arabic)')
                             ->nullable()
                             ->maxLength(255),
 
@@ -111,7 +128,7 @@ class BannerResource extends Resource
                     ->width(60),
 
                 TextColumn::make('page')
-                    ->label('Assigned Page')
+                    ->label('Page')
                     ->badge()
                     ->sortable()
                     ->searchable(),
@@ -146,9 +163,9 @@ class BannerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBanners::route('/'),
-            'create' => Pages\CreateBanner::route('/create'),
-            'edit' => Pages\EditBanner::route('/{record}/edit'),
+            'index' => Pages\ListHeaderBanners::route('/'),
+            'create' => Pages\CreateHeaderBanner::route('/create'),
+            'edit' => Pages\EditHeaderBanner::route('/{record}/edit'),
         ];
     }
 }
