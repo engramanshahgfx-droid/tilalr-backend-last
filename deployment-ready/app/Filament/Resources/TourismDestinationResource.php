@@ -351,7 +351,7 @@ class TourismDestinationResource extends Resource
                         'asia' => 'warning',
                         'africa' => 'success',
                         'australia' => 'primary',
-                        'america' => 'danger', // ✅ ADDED AMERICA COLOR
+                        'america' => 'danger',
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match($state) {
@@ -359,7 +359,7 @@ class TourismDestinationResource extends Resource
                         'asia' => 'Asia',
                         'africa' => 'Africa',
                         'australia' => 'Australia & NZ',
-                        'america' => 'America', // ✅ ADDED AMERICA
+                        'america' => 'America',
                         default => $state,
                     }),
                 Tables\Columns\TextColumn::make('location_en')
@@ -401,7 +401,7 @@ class TourismDestinationResource extends Resource
                         'asia' => 'Asia',
                         'africa' => 'Africa',
                         'australia' => 'Australia & New Zealand',
-                        'america' => 'America', // ✅ ADDED AMERICA
+                        'america' => 'America',
                     ])
                     ->label('Region'),
                 Tables\Filters\TernaryFilter::make('active')
