@@ -158,6 +158,7 @@ class BookingController extends Controller
             'success' => true,
             'payment_id' => $booking->payment_id,
             'amount' => $booking->total_amount ?? $booking->price,
+            'publishable_key' => config('services.moyasar.publishable_key') ?? env('MOYASAR_PUBLISHABLE_KEY'),
         ]);
     }
 }

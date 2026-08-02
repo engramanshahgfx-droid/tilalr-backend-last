@@ -57,7 +57,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->maxContentWidth('full')
             ->brandName('Admin Panel')
-            ->favicon(asset('favicon.ico'))
+            ->favicon(asset('assets/icon/favicon.ico'))
             ->navigationGroups([
                 'Content Management',
                 'Team Management',

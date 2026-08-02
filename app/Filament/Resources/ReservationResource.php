@@ -21,13 +21,20 @@ class ReservationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     
+    protected static ?string $navigationGroup = 'Bookings';
+    
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationGroup(): ?string
     {
-        return __('admin.nav.reservations_bookings');
+        return 'Bookings';
+    }
+
+    public static function canViewAny(): bool
+    {
+        return true;
     }
 
     public static function getModelLabel(): string

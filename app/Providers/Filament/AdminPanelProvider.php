@@ -62,7 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->maxContentWidth('full')
             ->brandName(fn () => __('admin.panel_name'))
-            ->favicon(asset('favicon.ico'))
+            ->favicon(asset('assets/icon/favicon.ico'))
             ->navigationGroups([
                 \Filament\Navigation\NavigationGroup::make()
                     ->label(fn () => __('admin.nav.administration')),
