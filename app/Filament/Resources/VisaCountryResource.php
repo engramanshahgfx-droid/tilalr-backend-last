@@ -14,11 +14,13 @@ class VisaCountryResource extends Resource
 {
     protected static ?string $model = VisaCountry::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-flag';
 
     protected static ?string $navigationLabel = 'Visa Countries';
 
-    protected static ?string $navigationGroup = 'International Destinations';
+    protected static ?string $navigationGroup = 'visas';
 
     protected static ?int $navigationSort = 9;
 

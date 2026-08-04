@@ -16,19 +16,19 @@ use Filament\Tables\Columns\BadgeColumn;
 class SchengenApplicationResource extends Resource
 {
     protected static ?string $model = SchengenApplication::class;
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationLabel = 'Schengen Visa';
+    protected static ?string $navigationLabel = 'Applications';
 
-    protected static ?string $modelLabel = 'Schengen Application';
+    protected static ?string $modelLabel = 'Application';
 
-    protected static ?string $pluralModelLabel = 'Schengen Applications';
+    protected static ?string $pluralModelLabel = 'Applications';
 
-    protected static ?string $navigationGroup = 'Content';
+    protected static ?string $navigationGroup = 'visas';
 
-    protected static ?int $navigationSort = 11;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

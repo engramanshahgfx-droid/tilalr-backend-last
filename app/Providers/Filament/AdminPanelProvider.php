@@ -65,23 +65,25 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('assets/icon/favicon.ico'))
             ->navigationGroups([
                 \Filament\Navigation\NavigationGroup::make()
+                    ->label(fn () => __('admin.nav.tourism') ?? 'Tourism'),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label(fn () => __('admin.nav.destinations')),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label('visas'),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label('Jamoula'),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label('International Services'),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label('Bookings'),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label(fn () => __('admin.nav.settings')),
+                \Filament\Navigation\NavigationGroup::make()
                     ->label(fn () => __('admin.nav.administration')),
                 \Filament\Navigation\NavigationGroup::make()
                     ->label(fn () => __('admin.nav.users')),
                 \Filament\Navigation\NavigationGroup::make()
                     ->label(fn () => __('admin.nav.content')),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn () => __('admin.nav.local_destinations')),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn () => __('admin.nav.international_destinations')),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn () => __('admin.nav.reservations_bookings')),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn () => __('admin.nav.payments')),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn () => __('admin.nav.communication')),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn () => __('admin.nav.settings')),
                 \Filament\Navigation\NavigationGroup::make()
                     ->label(fn () => __('admin.nav.website')),
             ])

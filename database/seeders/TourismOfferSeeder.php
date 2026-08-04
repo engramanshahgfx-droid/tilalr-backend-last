@@ -123,6 +123,7 @@ class TourismOfferSeeder extends Seeder
                 'active' => true,
                 'popular' => true,
                 'limited' => false,
+                'city' => 'riyadh',
             ],
             [
                 // Second Offer - Mountain Adventure
@@ -206,6 +207,7 @@ class TourismOfferSeeder extends Seeder
                 'active' => true,
                 'popular' => true,
                 'limited' => true,
+                'city' => 'riyadh',
             ],
             [
                 // Third Offer - Cultural City Tour
@@ -287,6 +289,7 @@ class TourismOfferSeeder extends Seeder
                 'active' => true,
                 'popular' => false,
                 'limited' => false,
+                'city' => 'riyadh',
             ],
             [
                 // Fourth Offer - Domestic Tour (example)
@@ -360,6 +363,7 @@ class TourismOfferSeeder extends Seeder
                 'active' => true,
                 'popular' => true,
                 'limited' => false,
+                'city' => 'alula',
             ],
         ];
 

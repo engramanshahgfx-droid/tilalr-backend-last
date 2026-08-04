@@ -19,6 +19,7 @@ return [
 
     // Navigation Groups
     'nav' => [
+        'tourism' => 'Tourism',
         'administration' => 'الإدارة',
         'users' => 'المستخدمين',
         'content' => 'المحتوى',
@@ -29,6 +30,7 @@ return [
         'communication' => 'التواصل',
         'settings' => 'الإعدادات',
         'website' => 'الموقع',
+        'destinations' => ' المدن',
     ],
 
     // Resources
@@ -121,8 +123,8 @@ return [
         'settings' => 'الإعدادات',
         
         // Destination (generic)
-        'destination' => 'الوجهة',
-        'destinations' => 'الوجهات',
+        'destination' => 'داخل السعودية',
+        'destinations' => 'داخل السعودية',
     ],
 
     // Form Labels

@@ -1,7 +1,6 @@
 # eSIM Implementation Checklist
 
 ## ✅ Backend Implementation (Complete)
-
 ### Database
 - [x] Migration created: `2026_05_09_000000_add_esim_fields_to_international_packages.php`
 - [x] Fields added:

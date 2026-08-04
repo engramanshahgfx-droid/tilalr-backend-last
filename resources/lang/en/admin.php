@@ -19,6 +19,7 @@ return [
 
     // Navigation Groups
     'nav' => [
+        'tourism' => 'Tourism',
         'administration' => 'Administration',
         'users' => 'Users',
         'content' => 'Content',
@@ -29,6 +30,7 @@ return [
         'communication' => 'Communication',
         'settings' => 'Settings',
         'website' => 'Website',
+        'destinations' => ' cities',
     ],
 
     // Resources
@@ -121,8 +123,8 @@ return [
         'settings' => 'Settings',
 
         // Destination (generic)
-        'destination' => 'Destination',
-        'destinations' => 'Destinations',
+        'destination' => 'Inside Saudi',
+        'destinations' => 'Inside Saudi',
     ],
 
     // Form Labels

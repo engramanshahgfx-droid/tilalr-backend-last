@@ -79,9 +79,9 @@ Route::get('/settings', [SettingController::class, 'index']);
 Route::get('/settings/{key}', [SettingController::class, 'show']);
 
 // Admin CRUD endpoints
-Route::post('/admin/offers', [\App\Http\Controllers\Api\OfferController::class, 'store']);
-Route::put('/admin/offers/{id}', [\App\Http\Controllers\Api\OfferController::class, 'update']);
-Route::delete('/admin/offers/{id}', [\App\Http\Controllers\Api\OfferController::class, 'destroy']);
+Route::post('/admin/offers', [\App\Http\Controllers\Api\TourismOfferController::class, 'index']);
+// Route::put('/admin/offers/{id}', [\App\Http\Controllers\Api\TourismOfferController::class, 'update']);
+// Route::delete('/admin/offers/{id}', [\App\Http\Controllers\Api\TourismOfferController::class, 'destroy']);
 
 // International Services Routes
 Route::post('/internet-packages', [InternetPackageRequestController::class, 'store']);
