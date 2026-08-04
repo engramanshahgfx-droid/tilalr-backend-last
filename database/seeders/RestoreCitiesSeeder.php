@@ -4,11 +4,13 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class RestoreCitiesSeeder extends Seeder
 {
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
         DB::table('cities')->truncate();
 
         $now = now();
@@ -791,6 +793,67 @@ class RestoreCitiesSeeder extends Seeder
             ],
         ];
 
-        DB::table('cities')->insert($cities);
+        if (Schema::hasColumn('cities', 'lang')) {
+            DB::table('cities')->insert($cities);
+        } else {
+            // Group by slug for Spatie translatable format
+            $grouped = [];
+            foreach ($cities as $c) {
+                $slug = $c['slug'];
+                if (!isset($grouped[$slug])) {
+                    $grouped[$slug] = [
+                        'slug' => $slug,
+                        'names' => [],
+                        'descriptions' => [],
+                        'best_times' => [],
+                        'activities' => [],
+                        'landmarks' => [],
+                        'image' => $c['image'],
+                        'images' => $c['images'] ?? null,
+                        'country' => $c['country'] ?? 'Saudi Arabia',
+                        'order' => $c['order'] ?? 0,
+                        'is_active' => $c['is_active'] ?? 1,
+                        'created_at' => $c['created_at'],
+                        'updated_at' => $c['updated_at'],
+                    ];
+                }
+                $lang = $c['lang'] ?? 'ar';
+                $grouped[$slug]['names'][$lang] = $c['name'];
+                $grouped[$slug]['descriptions'][$lang] = $c['description'];
+                $grouped[$slug]['best_times'][$lang] = $c['best_time'] ?? '';
+                
+                $acts = json_decode($c['activities'] ?? '[]', true);
+                $grouped[$slug]['activities'][$lang] = is_array($acts) ? $acts : [];
+                
+                $lands = json_decode($c['landmarks'] ?? '[]', true);
+                $grouped[$slug]['landmarks'][$lang] = is_array($lands) ? $lands : [];
+
+                if (!empty($c['image'])) {
+                    $grouped[$slug]['image'] = $c['image'];
+                }
+                if (!empty($c['images']) && $c['images'] !== '[]') {
+                    $grouped[$slug]['images'] = $c['images'];
+                }
+            }
+
+            foreach ($grouped as $slug => $data) {
+                DB::table('cities')->insert([
+                    'slug' => $slug,
+                    'name' => json_encode($data['names']),
+                    'description' => json_encode($data['descriptions']),
+                    'best_time' => json_encode($data['best_times']),
+                    'activities' => json_encode($data['activities']),
+                    'landmarks' => json_encode($data['landmarks']),
+                    'image' => $data['image'],
+                    'images' => $data['images'],
+                    'country' => $data['country'],
+                    'order' => $data['order'],
+                    'is_active' => $data['is_active'],
+                    'created_at' => $data['created_at'],
+                    'updated_at' => $data['updated_at'],
+                ]);
+            }
+        }
+        Schema::enableForeignKeyConstraints();
     }
 }

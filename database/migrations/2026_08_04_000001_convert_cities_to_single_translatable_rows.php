@@ -61,6 +61,7 @@ return new class extends Migration
         }
 
         // 2. Re-create the table
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('cities');
 
         Schema::create('cities', function (Blueprint $table) {
@@ -78,6 +79,7 @@ return new class extends Migration
             $table->json('landmarks')->nullable();
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
 
         // 3. Insert combined translatable records
         foreach ($grouped as $slug => $data) {
@@ -108,6 +110,7 @@ return new class extends Migration
         $cities = DB::table('cities')->get();
 
         // 2. Drop and recreate the old table structure
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('cities');
 
         Schema::create('cities', function (Blueprint $table) {
@@ -128,6 +131,7 @@ return new class extends Migration
 
             $table->unique(['slug', 'lang']);
         });
+        Schema::enableForeignKeyConstraints();
 
         // 3. De-serialize and write back as separate rows
         foreach ($cities as $c) {
