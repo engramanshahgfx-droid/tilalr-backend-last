@@ -57,6 +57,8 @@ class JamoulaOffer extends Model
         'meta_keywords_en',
         'meta_keywords_ar',
         'person_prices',
+        'tourism_offer_id',
+        'tourism_destination_id',
     ];
 
     protected $casts = [
@@ -71,6 +73,8 @@ class JamoulaOffer extends Model
         'price'           => 'decimal:2',
         'original_price'  => 'decimal:2',
         'rating'          => 'float',
+        'tourism_offer_id'=> 'integer',
+        'tourism_destination_id'=> 'integer',
     ];
 
     protected static function booted(): void
@@ -98,5 +102,15 @@ class JamoulaOffer extends Model
         }
 
         return asset('storage/' . ltrim($this->image, '/'));
+    }
+
+    public function tourismOffer()
+    {
+        return $this->belongsTo(TourismOffer::class, 'tourism_offer_id');
+    }
+
+    public function tourismDestination()
+    {
+        return $this->belongsTo(TourismDestination::class, 'tourism_destination_id');
     }
 }

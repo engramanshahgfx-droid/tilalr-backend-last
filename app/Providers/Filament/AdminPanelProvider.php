@@ -67,11 +67,11 @@ class AdminPanelProvider extends PanelProvider
                 \Filament\Navigation\NavigationGroup::make()
                     ->label(fn () => __('admin.nav.tourism') ?? 'Tourism'),
                 \Filament\Navigation\NavigationGroup::make()
+                    ->label('Jamoula'),
+                \Filament\Navigation\NavigationGroup::make()
                     ->label(fn () => __('admin.nav.destinations')),
                 \Filament\Navigation\NavigationGroup::make()
                     ->label('visas'),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label('Jamoula'),
                 \Filament\Navigation\NavigationGroup::make()
                     ->label('International Services'),
                 \Filament\Navigation\NavigationGroup::make()

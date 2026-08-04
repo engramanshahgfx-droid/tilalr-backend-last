@@ -128,10 +128,24 @@ class CityResource extends Resource
             Section::make('Assigned Offers')
                 ->schema([
                     Forms\Components\Select::make('tourismOffers')
-                        ->relationship('tourismOffers', 'title_en')
+                        ->options(\App\Models\TourismOffer::query()->where('active', true)->pluck('title_en', 'id'))
                         ->multiple()
                         ->preload()
                         ->label('Assigned Tourism Offers')
+                        ->dehydrated(false)
+                        ->afterStateHydrated(function (Forms\Components\Select $component, ?City $record) {
+                            if ($record) {
+                                $component->state($record->tourismOffers()->pluck('id')->toArray());
+                            }
+                        })
+                        ->saveRelationshipsUsing(function (City $record, $state) {
+                            // Remove assignment from offers currently assigned to this city
+                            \App\Models\TourismOffer::where('city', $record->slug)->update(['city' => null]);
+                            // Assign the selected offers to this city
+                            if (!empty($state)) {
+                                \App\Models\TourismOffer::whereIn('id', $state)->update(['city' => $record->slug]);
+                            }
+                        })
                 ])
         ]);
     }

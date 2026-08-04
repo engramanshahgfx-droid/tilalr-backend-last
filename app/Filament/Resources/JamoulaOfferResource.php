@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\JamoulaOfferResource\Pages;
+use App\Filament\Resources\TourismOfferResource;
+use App\Filament\Resources\TourismDestinationResource;
 use App\Models\JamoulaOffer;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -445,20 +447,27 @@ class JamoulaOfferResource extends Resource
                             ->schema([
                                 Section::make('Pricing')
                                     ->schema([
-                                        TextInput::make('price')
-                                            ->label('Price (SAR)')
-                                            ->required()
-                                            ->numeric()
-                                            ->prefix('SAR')
-                                            ->default(0)
-                                            ->step(0.01),
-
-                                        TextInput::make('original_price')
-                                            ->label('Original Price (SAR)')
-                                            ->numeric()
-                                            ->prefix('SAR')
-                                            ->step(0.01)
-                                            ->helperText('If set, shows a strike-through price'),
+                                        Repeater::make('person_prices')
+                                            ->label('Person Offers & Pricing (Dynamic)')
+                                            ->schema([
+                                                TextInput::make('persons')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->minValue(1)
+                                                    ->label('Number of Persons (e.g., 1, 2, 3, 4...)')
+                                                    ->placeholder('1'),
+                                                TextInput::make('price')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->prefix('SAR')
+                                                    ->label('Price for this Offer (SAR)')
+                                                    ->placeholder('2500.00'),
+                                            ])
+                                            ->columns(2)
+                                            ->defaultItems(1)
+                                            ->createItemButtonLabel('Add New Person Offer')
+                                            ->columnSpanFull()
+                                            ->helperText('Add custom price tiers based on number of persons (e.g. 1 Person = 2500 SAR, 2 Persons = 4000 SAR, etc.)'),
 
                                         TextInput::make('discount')
                                             ->label('Discount (%)')
@@ -553,17 +562,26 @@ class JamoulaOfferResource extends Resource
                     ->circular()
                     ->width(50)
                     ->height(50)
-                    ->defaultImageUrl('/placeholder.png'),
+                    ->defaultImageUrl('/placeholder.png')
+                    ->state(fn (JamoulaOffer $record) => 
+                        $record->tourismOffer?->image ?? ($record->tourismDestination?->image ?? $record->image)
+                    ),
 
                 TextColumn::make('title_en')
                     ->label('Title (EN)')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->state(fn (JamoulaOffer $record) => 
+                        $record->tourismOffer?->title_en ?? ($record->tourismDestination?->title_en ?? $record->title_en)
+                    ),
 
                 TextColumn::make('title_ar')
                     ->label('Title (AR)')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->state(fn (JamoulaOffer $record) => 
+                        $record->tourismOffer?->title_ar ?? ($record->tourismDestination?->title_ar ?? $record->title_ar)
+                    ),
 
                 TextColumn::make('type')
                     ->label('Type')
@@ -573,17 +591,26 @@ class JamoulaOfferResource extends Resource
                         'local' => 'info',
                         'vip' => 'warning',
                         default => 'gray',
-                    }),
+                    })
+                    ->state(fn (JamoulaOffer $record) => 
+                        $record->tourismOffer?->type ?? ($record->tourismDestination?->type ?? $record->type)
+                    ),
 
                 TextColumn::make('price')
                     ->label('Price')
                     ->suffix(' SAR')
-                    ->sortable(),
+                    ->sortable()
+                    ->state(fn (JamoulaOffer $record) => 
+                        $record->tourismOffer?->price ?? ($record->tourismDestination?->price ?? $record->price)
+                    ),
 
                 TextColumn::make('rating')
                     ->label('Rating')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => $state ? '⭐ ' . $state : '-'),
+                    ->formatStateUsing(fn ($state) => $state ? '⭐ ' . $state : '-')
+                    ->state(fn (JamoulaOffer $record) => 
+                        $record->tourismOffer?->rating ?? ($record->tourismDestination?->rating ?? $record->rating)
+                    ),
 
                 ToggleColumn::make('active')
                     ->label('Active')
@@ -624,9 +651,27 @@ class JamoulaOfferResource extends Resource
                     ->falseLabel('Not Popular'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->url(function (JamoulaOffer $record) {
+                        if ($record->tourism_offer_id && $record->tourismOffer) {
+                            return TourismOfferResource::getUrl('edit', ['record' => $record->tourismOffer]);
+                        }
+                        if ($record->tourism_destination_id && $record->tourismDestination) {
+                            return TourismDestinationResource::getUrl('edit', ['record' => $record->tourismDestination]);
+                        }
+                        return JamoulaOfferResource::getUrl('edit', ['record' => $record]);
+                    }),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->url(function (JamoulaOffer $record) {
+                        if ($record->tourism_offer_id && $record->tourismOffer) {
+                            return TourismOfferResource::getUrl('edit', ['record' => $record->tourismOffer]);
+                        }
+                        if ($record->tourism_destination_id && $record->tourismDestination) {
+                            return TourismDestinationResource::getUrl('edit', ['record' => $record->tourismDestination]);
+                        }
+                        return JamoulaOfferResource::getUrl('edit', ['record' => $record]);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -80,10 +80,6 @@ class TourismDestination extends Model
         });
     }
 
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 
     private function decodeJsonArray($value): array
     {
