@@ -12,7 +12,11 @@ use Filament\Tables\Table;
 
 class BookingResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = Booking::class;
+    protected static ?string $permissionKey = 'bookings';
 
     protected static ?string $navigationIcon = 'heroicon-o-receipt-refund';
 

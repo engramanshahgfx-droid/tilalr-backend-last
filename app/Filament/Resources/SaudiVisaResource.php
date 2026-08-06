@@ -20,7 +20,11 @@ use Filament\Tables\Filters\SelectFilter;
 
 class SaudiVisaResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = VisaApplication::class;
+    protected static ?string $permissionKey = 'saudi_visas';
     protected static bool $shouldRegisterNavigation = false;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationLabel = 'Saudi Visa Applications';

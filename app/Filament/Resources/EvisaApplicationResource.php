@@ -13,7 +13,11 @@ use Filament\Tables\Columns\TextColumn;
 
 class EvisaApplicationResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = EvisaApplication::class;
+    protected static ?string $permissionKey = 'evisa_applications';
 
     protected static bool $shouldRegisterNavigation = false;
 

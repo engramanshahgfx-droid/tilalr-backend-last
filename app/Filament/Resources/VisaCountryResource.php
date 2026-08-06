@@ -12,7 +12,11 @@ use Filament\Tables\Table;
 
 class VisaCountryResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = VisaCountry::class;
+    protected static ?string $permissionKey = 'visa_countries';
 
     protected static bool $shouldRegisterNavigation = false;
 

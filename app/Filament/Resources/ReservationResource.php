@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 class ReservationResource extends Resource
 {
     use HasResourcePermissions;
+    use Concerns\HasTranslations;
 
     protected static ?string $model = Reservation::class;
 
@@ -29,12 +30,7 @@ class ReservationResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Bookings';
-    }
-
-    public static function canViewAny(): bool
-    {
-        return true;
+        return __('admin.nav.bookings');
     }
 
     public static function getModelLabel(): string

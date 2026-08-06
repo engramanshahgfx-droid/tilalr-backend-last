@@ -20,7 +20,11 @@ use Filament\Tables\Columns\ToggleColumn;
 
 class BannerResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = Banner::class;
+    protected static ?string $permissionKey = 'banners';
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-bar';
     protected static ?string $navigationGroup = 'Settings';
     protected static ?string $label = 'Banner';

@@ -15,7 +15,11 @@ use Filament\Tables\Columns\BadgeColumn;
 
 class SchengenApplicationResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = SchengenApplication::class;
+    protected static ?string $permissionKey = 'schengen_applications';
     protected static bool $shouldRegisterNavigation = true;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class JamoulaOffer extends Model
 {
-    use HasFactory;
+    use HasFactory, \App\Traits\LogsActivity;
 
     protected $table = 'jamoula_offers';
 

@@ -13,7 +13,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TourismDestinationResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = TourismDestination::class;
+    protected static ?string $permissionKey = 'tourism_destinations';
 
     protected static ?string $navigationIcon = 'heroicon-o-globe-americas';
 
@@ -23,11 +27,6 @@ class TourismDestinationResource extends Resource
 
     protected static bool $shouldRegisterNavigation = true;
 
-    public static function canViewAny(): bool
-    {
-        return true;
-    }
-
     public static function shouldRegisterNavigation(): bool
     {
         return true;
@@ -35,17 +34,17 @@ class TourismDestinationResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'International Destination';
+        return __('admin.resources.international_destination');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'International Destinations';
+        return __('admin.resources.international_destinations');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'International Destinations';
+        return __('admin.resources.international_destinations');
     }
 
     public static function form(Form $form): Form

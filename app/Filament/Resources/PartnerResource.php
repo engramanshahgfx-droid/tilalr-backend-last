@@ -19,7 +19,11 @@ use Filament\Tables\Columns\ToggleColumn;
 
 class PartnerResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = Partner::class;
+    protected static ?string $permissionKey = 'partners';
     protected static ?string $navigationIcon = 'heroicon-o-gift';
     protected static ?string $navigationGroup = 'Settings';
     protected static ?string $label = 'Partner Logo';

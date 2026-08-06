@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourismOffer extends Model
 {
-    use HasFactory;
+    use HasFactory, \App\Traits\LogsActivity;
 
     protected $table = 'tourism_offers';
 

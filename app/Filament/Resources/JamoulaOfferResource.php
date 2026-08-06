@@ -27,7 +27,11 @@ use Filament\Tables\Columns\ToggleColumn;
 
 class JamoulaOfferResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+    use Concerns\HasTranslations;
+
     protected static ?string $model = JamoulaOffer::class;
+    protected static ?string $permissionKey = 'jamoula_offers';
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Jamoula';
     protected static ?string $label = 'Jamoula Offer';

@@ -19,28 +19,31 @@ use Filament\Tables\Columns\IconColumn;
 
 class CityResource extends Resource
 {
+    use Concerns\HasResourcePermissions;
+
     protected static ?string $model = City::class;
+    protected static ?string $permissionKey = 'cities';
 
     protected static ?string $navigationIcon = 'heroicon-o-map';
 
     public static function getNavigationGroup(): ?string
     {
-        return __('admin.nav.destinations');
+        return __('admin.nav.cities');
     }
 
     public static function getModelLabel(): string
     {
-        return __('admin.resources.destination');
+        return __('admin.resources.city');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('admin.resources.destinations');
+        return __('admin.resources.cities');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('admin.resources.destinations');
+        return __('admin.resources.cities');
     }
 
     public static function shouldRegisterNavigation(): bool
